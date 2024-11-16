@@ -1,0 +1,488 @@
+
+Slip 8 :
+
+Q.1) Create a simple Angular application that fetches data from an API using HttpClient. Implement an Observable to fetch data from an API endpoint
+
+
+
+Steps to Create the Application:
+Set up the Angular Application: First, ensure you have Angular CLI installed. If not, install it globally using the following command:
+
+bash
+Copy code
+npm install -g @angular/cli
+Then, create a new Angular project:
+
+bash
+Copy code
+ng new fetch-data-app
+cd fetch-data-app
+Install Angular HTTP Client Module: The HttpClient module is required to make HTTP requests. Angular CLI includes this module, but you need to import it into your app.
+
+Open app.module.ts and add the HttpClientModule to the imports:
+
+typescript
+Copy code
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule  // Add HttpClientModule here
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+Create a Service to Fetch Data: Create a service to handle the HTTP requests. You can generate a service using Angular CLI.
+
+bash
+Copy code
+ng generate service data
+In the data.service.ts file, write the code to fetch data from an API. For this example, we'll use a dummy JSON API (e.g., https://jsonplaceholder.typicode.com/posts).
+
+typescript
+Copy code
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+
+  private apiUrl = 'https://jsonplaceholder.typicode.com/posts'; // Replace with your API URL
+
+  constructor(private http: HttpClient) { }
+
+  // Method to fetch data using HTTP GET request
+  getPosts(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
+}
+In the getPosts() method, we're using http.get() to make an HTTP GET request. This method returns an Observable, which is a common way to handle asynchronous operations in Angular.
+
+Use the Service in the Component: Open app.component.ts and modify it to call the DataService and display the data.
+
+typescript
+Copy code
+import { Component, OnInit } from '@angular/core';
+import { DataService } from './data.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  posts: any[] = []; // Array to store fetched posts
+
+  constructor(private dataService: DataService) {}
+
+  ngOnInit(): void {
+    // Fetch the data when the component initializes
+    this.dataService.getPosts().subscribe(
+      (data) => {
+        this.posts = data; // Store the fetched data in posts
+      },
+      (error) => {
+        console.error('Error fetching data', error);
+      }
+    );
+  }
+}
+Here, in the ngOnInit() lifecycle hook, we're calling the getPosts() method from the DataService and subscribing to the returned Observable. When the data is successfully fetched, it is stored in the posts array.
+
+Display the Data in the Template: Open app.component.html and use ngFor to loop through the posts array and display the data.
+
+html
+Copy code
+<div class="container">
+  <h1>Posts</h1>
+
+  <div *ngIf="posts.length === 0">
+    <p>Loading...</p>
+  </div>
+
+  <div *ngFor="let post of posts">
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.body }}</p>
+  </div>
+</div>
+The *ngFor directive is used to loop over each post and display its title and body. The *ngIf directive checks if the posts array is empty (meaning the data is still loading), and shows a "Loading..." message until the data is available.
+
+Run the Application: After completing the above steps, start the Angular development server:
+
+bash
+Copy code
+ng serve
+Open http://localhost:4200/ in your browser. You should see a list of posts fetched from the API.
+
+Full Code Summary:
+app.module.ts:
+
+typescript
+Copy code
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+data.service.ts:
+
+typescript
+Copy code
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+  private apiUrl = 'https://jsonplaceholder.typicode.com/posts';
+
+  constructor(private http: HttpClient) { }
+
+  getPosts(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
+}
+app.component.ts:
+
+typescript
+Copy code
+import { Component, OnInit } from '@angular/core';
+import { DataService } from './data.service';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  posts: any[] = [];
+
+  constructor(private dataService: DataService) {}
+
+  ngOnInit(): void {
+    this.dataService.getPosts().subscribe(
+      (data) => {
+        this.posts = data;
+      },
+      (error) => {
+        console.error('Error fetching data', error);
+      }
+    );
+  }
+}
+app.component.html:
+
+html
+Copy code
+<div class="container">
+  <h1>Posts</h1>
+
+  <div *ngIf="posts.length === 0">
+    <p>Loading...</p>
+  </div>
+
+  <div *ngFor="let post of posts">
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.body }}</p>
+  </div>
+</div>
+
+
+Q.2) Develop an Express.js application that defines routes for Create, Update operations 
+on a resource (Employee)
+
+const express = require('express');
+const bodyParser = require('body-parser');
+
+// Initialize the Express app
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON data
+app.use(bodyParser.json());
+
+// In-memory employee data (this will act as our database for this example)
+let employees = [
+  { id: 1, name: 'John Doe', position: 'Developer', salary: 50000 },
+  { id: 2, name: 'Jane Smith', position: 'Manager', salary: 60000 }
+];
+
+// Route to get all employees
+app.get('/employees', (req, res) => {
+  res.json(employees);
+});
+
+// Route to create a new employee
+app.post('/employees', (req, res) => {
+  const newEmployee = req.body;
+
+  // Validate input data
+  if (!newEmployee.name || !newEmployee.position || !newEmployee.salary) {
+    return res.status(400).json({ message: 'All fields are required' });
+  }
+
+  // Generate a new ID
+  const newId = employees.length ? employees[employees.length - 1].id + 1 : 1;
+  newEmployee.id = newId;
+
+  // Add the new employee to the list
+  employees.push(newEmployee);
+
+  res.status(201).json({ message: 'Employee created', employee: newEmployee });
+});
+
+// Route to update an existing employee
+app.put('/employees/:id', (req, res) => {
+  const employeeId = parseInt(req.params.id);
+  const updatedEmployee = req.body;
+
+  // Find the employee by ID
+  const employee = employees.find(emp => emp.id === employeeId);
+
+  if (!employee) {
+    return res.status(404).json({ message: 'Employee not found' });
+  }
+
+  // Update the employee details
+  employee.name = updatedEmployee.name || employee.name;
+  employee.position = updatedEmployee.position || employee.position;
+  employee.salary = updatedEmployee.salary || employee.salary;
+
+  res.json({ message: 'Employee updated', employee });
+});
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
+
+
+
+
+
+
+Slip 11 :
+
+
+
+Q.1) Develop an Express.js application that defines routes for Create operations on a resource (Movie)
+
+
+
+// Import required libraries
+
+const express = require('express');
+
+const bodyParser = require('body-parser');
+
+
+
+// Initialize the Express app
+
+const app = express();
+
+
+
+// Middleware to parse JSON data in request body
+
+app.use(bodyParser.json());
+
+
+
+// In-memory storage for movies (acting as a database)
+
+let movies = [];
+
+
+
+// Route to create a movie (POST request)
+
+app.post('/movie', (req, res) => {
+
+  // Extract movie details from the request body
+
+  const { title, director, releaseYear, genre } = req.body;
+
+
+
+  // Validate required fields
+
+  if (!title || !director || !releaseYear || !genre) {
+
+    return res.status(400).json({
+
+      success: false,
+
+      message: 'All fields (title, director, releaseYear, genre) are required.'
+
+    });
+
+  }
+
+
+
+  // Create a new movie object
+
+  const newMovie = {
+
+    id: movies.length + 1, // Generate a unique ID (just for demonstration)
+
+    title,
+
+    director,
+
+    releaseYear,
+
+    genre
+
+  };
+
+
+
+  // Save the new movie to the "database"
+
+  movies.push(newMovie);
+
+
+
+  // Send success response
+
+  return res.status(201).json({
+
+    success: true,
+
+    message: 'Movie created successfully!',
+
+    data: newMovie
+
+  });
+
+});
+
+
+
+// Route to get all movies (GET request for testing)
+
+app.get('/movies', (req, res) => {
+
+  return res.status(200).json({
+
+    success: true,
+
+    data: movies
+
+  });
+
+});
+
+
+
+// Error handler for undefined routes
+
+app.use((req, res) => {
+
+  return res.status(404).json({
+
+    success: false,
+
+    message: 'Route not found'
+
+  });
+
+});
+
+
+
+// Start the server
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+
+  console.log(`Server running at http://localhost:${PORT}`);
+
+});
+
+
+
+
+Q.2) Create Angular application that print the name of students who play basketball using filter and map method.
+
+
+
+import { Component } from '@angular/core';
+
+
+
+@Component({
+
+  selector: 'app-student-list',
+
+  templateUrl: './student-list.component.html',
+
+  styleUrls: ['./student-list.component.css']
+
+})
+
+export class StudentListComponent {
+
+  // Array of students with their names and the sports they play
+
+  students = [
+
+    { name: 'Alice', sports: ['Basketball', 'Football'] },
+
+    { name: 'Bob', sports: ['Football', 'Cricket'] },
+
+    { name: 'Charlie', sports: ['Basketball', 'Tennis'] },
+
+    { name: 'David', sports: ['Cricket'] },
+
+    { name: 'Eva', sports: ['Basketball', 'Hockey'] }
+
+  ];
+
+
+
+  // Method to get the names of students who play Basketball
+
+  getBasketballPlayers() {
+
+    return this.students
+
+      .filter(student => student.sports.includes('Basketball'))  // Filter students who play basketball
+
+      .map(student => student.name);  // Map the result to just the student names
+
+  }
+
+}
+
+
+
