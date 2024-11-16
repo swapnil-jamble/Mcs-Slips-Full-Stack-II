@@ -1,0 +1,1002 @@
+ 
+
+ 
+
+                                            SAVITRIBAI PHULE PUNE UNIVERSITY
+
+                                                     M.Sc. (Computer Science) Sem-III
+
+                                             Practical Examination (From 2024-2025)
+
+                                                         SUBJECT: CS-611-MJP: 
+
+                                  Lab Course on CS-610-MJ (Full Stack Development- II
+
+
+
+                                      Practical Slips Programs : Full  Stack Developement- II
+
+
+
+Slip 1 :
+
+
+
+Q.1) Write an AngularJS script for addition of two numbers using ng-init, ng-model & ng-bind. And also demonstrate ng-show, ng-disabled, ng-click directives on button component.
+
+
+
+<!DOCTYPE html>
+
+<html lang="en" ng-app="myApp">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AngularJS Addition</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+</head>
+
+<body ng-controller="myCtrl">
+
+
+
+    <!-- Step 1: Initialize numbers using ng-init -->
+
+    <div ng-init="num1 = 0; num2 = 0; sum = 0;">
+
+
+
+        <!-- Step 2: Input fields for numbers -->
+
+        <label for="num1">Enter first number:</label>
+
+        <input type="number" id="num1" ng-model="num1">
+
+        <br><br>
+
+
+
+        <label for="num2">Enter second number:</label>
+
+        <input type="number" id="num2" ng-model="num2">
+
+        <br><br>
+
+
+
+        <!-- Step 3: Show sum using ng-bind -->
+
+        <h3>The sum is: <span ng-bind="sum"></span></h3>
+
+
+
+        <!-- Step 4: Button to calculate sum -->
+
+        <button ng-click="calculateSum()" ng-disabled="num1 == 0 || num2 == 0">Add</button>
+
+        
+
+        <!-- Step 5: Display a message when sum is greater than 0 using ng-show -->
+
+        <div ng-show="sum > 0">
+
+            <p>Calculation completed successfully!</p>
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <script>
+
+        // AngularJS Application and Controller
+
+        var app = angular.module('myApp', []);
+
+        
+
+        app.controller('myCtrl', function($scope) {
+
+            // Function to calculate the sum of two numbers
+
+            $scope.calculateSum = function() {
+
+                $scope.sum = parseFloat($scope.num1) + parseFloat($scope.num2);
+
+            };
+
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>
+
+
+
+
+Q.2) Create a Node.js application that reads data from multiple files asynchronously using promises and async/await
+
+
+
+const fs = require('fs').promises;  // Using fs.promises API for file operations
+
+
+
+// Function to read a file asynchronously using Promises
+
+function readFile(fileName) {
+
+    return fs.readFile(fileName, 'utf8')
+
+        .then(data => {
+
+            console.log(`Successfully read ${fileName}:`);
+
+            return data;  // Return file content
+
+        })
+
+        .catch(err => {
+
+            console.error(`Error reading file ${fileName}:`, err);
+
+            throw err;  // Propagate error
+
+        });
+
+}
+
+
+
+// Function to read multiple files asynchronously using async/await
+
+async function readFiles() {
+
+    try {
+
+        // Wait for all file readings to complete
+
+        const data1 = await readFile('file1.txt');
+
+        const data2 = await readFile('file2.txt');
+
+        const data3 = await readFile('file3.txt');
+
+        
+
+        // Log the file contents
+
+        console.log(`File 1 content: ${data1}`);
+
+        console.log(`File 2 content: ${data2}`);
+
+        console.log(`File 3 content: ${data3}`);
+
+        
+
+    } catch (err) {
+
+        console.error('Error during file read operations:', err);
+
+    }
+
+}
+
+
+
+// Start reading the files
+
+readFiles();
+
+
+Slip 2 :
+
+Q.1) Write an AngularJS script to print details of bank (bank name, MICR code, IFC code, address etc.) in tabular form using ng-repeat
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Bank Details</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin: 20px 0;
+
+        }
+
+        th, td {
+
+            padding: 8px 12px;
+
+            text-align: left;
+
+            border: 1px solid #ddd;
+
+        }
+
+        th {
+
+            background-color: #f4f4f4;
+
+        }
+
+    </style>
+
+</head>
+
+<body ng-app="bankApp" ng-controller="bankController">
+
+
+
+    <h2>Bank Details</h2>
+
+
+
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>Bank Name</th>
+
+                <th>MICR Code</th>
+
+                <th>IFC Code</th>
+
+                <th>Address</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr ng-repeat="bank in banks">
+
+                <td>{{ bank.name }}</td>
+
+                <td>{{ bank.micrCode }}</td>
+
+                <td>{{ bank.ifcCode }}</td>
+
+                <td>{{ bank.address }}</td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+
+
+    <script>
+
+        // AngularJS application module
+
+        var app = angular.module('bankApp', []);
+
+
+
+        // Controller for the bank details
+
+        app.controller('bankController', function($scope) {
+
+            $scope.banks = [
+
+                {
+
+                    name: 'State Bank of India',
+
+                    micrCode: '123456789',
+
+                    ifcCode: 'SBI123456',
+
+                    address: 'Mumbai, Maharashtra'
+
+                },
+
+                {
+
+                    name: 'HDFC Bank',
+
+                    micrCode: '987654321',
+
+                    ifcCode: 'HDFC987654',
+
+                    address: 'New Delhi, Delhi'
+
+                },
+
+                {
+
+                    name: 'ICICI Bank',
+
+                    micrCode: '112233445',
+
+                    ifcCode: 'ICICI112233',
+
+                    address: 'Chennai, Tamil Nadu'
+
+                },
+
+                {
+
+                    name: 'Axis Bank',
+
+                    micrCode: '556677889',
+
+                    ifcCode: 'AXIS556677',
+
+                    address: 'Bangalore, Karnataka'
+
+                }
+
+            ];
+
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>
+
+
+
+
+Q.2) Create a simple Angular application that fetches data from an API using HttpClient. Implement an Observable to fetch data from an API endpoint.
+
+Steps:
+Set up Angular Project: You need to create an Angular project if you don’t have one.
+Install HttpClientModule: Make sure the HttpClientModule is imported in your application module.
+Create Service: Create a service that uses HttpClient to fetch data from an API.
+Use Observable: Implement an Observable to handle asynchronous data fetching.
+Bind Data to Component: Use Angular's data binding to display the data in the component.
+Step-by-step Guide
+Step 1: Set up a new Angular project (if you haven't already)
+First, make sure you have Angular CLI installed. If not, install it using the following command:
+
+bash
+Copy code
+npm install -g @angular/cli
+Then, create a new Angular project:
+
+bash
+Copy code
+ng new fetch-data-app
+cd fetch-data-app
+Step 2: Install HttpClientModule
+In your Angular project, you need to import HttpClientModule in your main application module.
+
+Open src/app/app.module.ts and update the code as follows:
+
+typescript
+Copy code
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';  // Import HttpClientModule
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule  // Add HttpClientModule to the imports array
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+Step 3: Create a Service to Fetch Data
+Next, generate a service that will handle the API call. Open the terminal and use Angular CLI to generate a service:
+
+bash
+Copy code
+ng generate service data
+This will create a file data.service.ts. In that service, we'll use HttpClient to fetch data from an API endpoint. Here's how you can set it up:
+
+typescript
+Copy code
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';  // Import Observable
+import { catchError } from 'rxjs/operators';  // To handle errors
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+  private apiUrl = 'https://jsonplaceholder.typicode.com/posts';  // Example API endpoint
+
+  constructor(private http: HttpClient) { }
+
+  // Method to get data from the API
+  getData(): Observable<any> {
+    return this.http.get<any>(this.apiUrl).pipe(
+      catchError(error => {
+        console.error('Error occurred:', error);
+        throw error;
+      })
+    );
+  }
+}
+Step 4: Use the Service in the Component
+Now, let’s use the DataService to fetch the data in the component and display it.
+
+Open src/app/app.component.ts and update it as follows:
+
+typescript
+Copy code
+import { Component, OnInit } from '@angular/core';
+import { DataService } from './data.service';  // Import DataService
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  data: any = [];  // Variable to hold the fetched data
+
+  constructor(private dataService: DataService) { }
+
+  // ngOnInit lifecycle hook to call the API when the component loads
+  ngOnInit(): void {
+    this.dataService.getData().subscribe(
+      (response) => {
+        this.data = response;  // Store the response in the 'data' variable
+      },
+      (error) => {
+        console.error('Error:', error);  // Handle errors if any
+      }
+    );
+  }
+}
+Step 5: Bind Data in the Template
+Now, bind the data in the component template (src/app/app.component.html) to display it. You can display the fetched data in a list or table format.
+
+html
+Copy code
+<div style="text-align:center; padding: 20px;">
+  <h1>Fetched Data from API</h1>
+
+  <div *ngIf="data.length > 0; else noData">
+    <ul>
+      <li *ngFor="let item of data">
+        <h4>{{ item.title }}</h4>
+        <p>{{ item.body }}</p>
+      </li>
+    </ul>
+  </div>
+
+  <ng-template #noData>
+    <p>No data available.</p>
+  </ng-template>
+</div>
+Step 6: Run the Application
+Now that everything is set up, run the Angular application using the following command:
+
+bash
+Copy code
+ng serve
+Visit http://localhost:4200 in your browser to see the results. The application will display the data fetched from the API.
+
+Explanation of the Code:
+HttpClient: Used for making HTTP requests in Angular. We use the get method to send a GET request to the API.
+Observable: Angular’s HttpClient.get() method returns an Observable, which allows you to handle asynchronous data fetching.
+Subscribe: We use the subscribe() method to get the response once the data is fetched.
+Error Handling: We use catchError from rxjs to handle any errors that occur during the HTTP request.
+**ngIf and ngFor: We use *ngIf to conditionally render the data and *ngFor to loop through the array and display each item.
+Sample Output:
+The application will display the title and body of posts from the jsonplaceholder API in a list. The data will look like:
+
+sql
+Copy code
+Fetched Data from API
+Post 1: Title and body of the first post.
+Post 2: Title and body of the second post.
+...
+
+
+
+
+Slip 3 :
+
+Q.1) Write an AngularJS script to display list of games stored in an array on click of button using ng-click and also demonstrate ng-init, ng-bind directive of AngularJS.
+
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AngularJS Game List</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+</head>
+
+<body ng-app="gameApp" ng-init="games = ['Soccer', 'Basketball', 'Tennis', 'Cricket', 'Football']">
+
+
+
+  <div ng-controller="gameController">
+
+
+
+    <!-- Displaying the List of Games using ng-bind -->
+
+    <h3 ng-bind="'Games List'"></h3>
+
+
+
+    <!-- Button to trigger the display of games -->
+
+    <button ng-click="showGames = !showGames">
+
+      Click to Display Games
+
+    </button>
+
+
+
+    <!-- Display the games list when the button is clicked -->
+
+    <ul ng-show="showGames">
+
+      <li ng-repeat="game in games">{{ game }}</li>
+
+    </ul>
+
+
+
+  </div>
+
+
+
+  <script>
+
+    // Define AngularJS Application and Controller
+
+    var app = angular.module('gameApp', []);
+
+    app.controller('gameController', function($scope) {
+
+      // ng-init is used in the HTML itself to initialize the games array
+
+      // ng-click logic is used to toggle the showGames boolean value
+
+      $scope.showGames = false; // This will hide the list initially
+
+    });
+
+  </script>
+
+
+
+</body>
+
+</html>
+
+
+
+Q.2) Find a company with a workforce greater than 30 in the array (use find by id method)
+
+// Array of companies with id and workforce properties
+const companies = [
+    { id: 1, name: 'Company A', workforce: 25 },
+    { id: 2, name: 'Company B', workforce: 50 },
+    { id: 3, name: 'Company C', workforce: 100 },
+    { id: 4, name: 'Company D', workforce: 10 },
+];
+
+// Function to find the company by id and workforce greater than 30
+function findCompanyByIdAndWorkforce(id) {
+    // Find the company with a specific id and workforce greater than 30
+    const company = companies.find(company => company.id === id && company.workforce > 30);
+    return company;
+}
+
+// Example: Find company with id 2 and workforce greater than 30
+const company = findCompanyByIdAndWorkforce(2);
+
+// Display the result
+if (company) {
+    console.log(`Found company: ${company.name} with workforce: ${company.workforce}`);
+} else {
+    console.log('No company found with the given conditions');
+}
+
+Slip 4 :
+
+Q.1) Fetch the details using ng-repeat in AngularJS [15]
+
+
+
+<!DOCTYPE html>
+
+<html lang="en" ng-app="myApp">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AngularJS ng-repeat Example</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+</head>
+
+<body>
+
+
+
+    <div ng-controller="BankController">
+
+        <h2>Bank Details</h2>
+
+
+
+        <!-- Table to display bank details using ng-repeat -->
+
+        <table border="1">
+
+            <thead>
+
+                <tr>
+
+                    <th>Bank Name</th>
+
+                    <th>MICR Code</th>
+
+                    <th>IFSC Code</th>
+
+                    <th>Address</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <!-- Using ng-repeat to iterate over the 'banks' array -->
+
+                <tr ng-repeat="bank in banks">
+
+                    <td>{{bank.name}}</td>
+
+                    <td>{{bank.micrCode}}</td>
+
+                    <td>{{bank.ifscCode}}</td>
+
+                    <td>{{bank.address}}</td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+
+    <script>
+
+        // Define AngularJS module and controller
+
+        var app = angular.module('myApp', []);
+
+
+
+        app.controller('BankController', function($scope) {
+
+            // Data for banks
+
+            $scope.banks = [
+
+                { name: 'ABC Bank', micrCode: '123456789', ifscCode: 'ABC123', address: '123 Main St, City A' },
+
+                { name: 'XYZ Bank', micrCode: '987654321', ifscCode: 'XYZ987', address: '456 Second St, City B' },
+
+                { name: 'LMN Bank', micrCode: '112233445', ifscCode: 'LMN456', address: '789 Third St, City C' },
+
+                { name: 'PQR Bank', micrCode: '998877665', ifscCode: 'PQR321', address: '101 First St, City D' }
+
+            ];
+
+        });
+
+    </script>
+
+
+
+</body>
+
+</html>
+
+
+
+
+
+
+Q.2) Express.js application to include middleware for parsing request bodies (e.g., JSON, form data) and validating input data.
+
+
+const express = require('express');
+const { body, validationResult } = require('express-validator');
+const bodyParser = require('body-parser');
+
+const app = express();
+const port = 3000;
+
+// Middleware to parse JSON and form data
+app.use(bodyParser.json());  // For JSON payloads
+app.use(bodyParser.urlencoded({ extended: true }));  // For form data (x-www-form-urlencoded)
+
+// Route with input validation
+app.post('/submit', [
+    // Validate and sanitize input data using express-validator
+    body('name').isString().withMessage('Name must be a string').notEmpty().withMessage('Name is required'),
+    body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
+    body('age').isInt({ min: 18 }).withMessage('Age must be a number and at least 18'),
+], (req, res) => {
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    // If validation is successful, process the request data
+    const { name, email, age } = req.body;
+    res.status(200).json({
+        message: 'Data received successfully',
+        data: {
+            name,
+            email,
+            age
+        }
+    });
+});
+
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${port}`);
+});
+
+
+
+ 
+
+Slip 5 :
+
+Q.1) Create a simple Angular component that takes input data and displays it. [15]
+
+import { Component } from '@angular/core';
+
+
+
+@Component({
+
+  selector: 'app-input-display',
+
+  templateUrl: './input-display.component.html',
+
+  styleUrls: ['./input-display.component.css']
+
+})
+
+export class InputDisplayComponent {
+
+  // Define a property to hold the input data
+
+  inputData: string = '';
+
+
+
+  // Method to update the inputData (optional)
+
+  updateData(value: string): void {
+
+    this.inputData = value;
+
+  }
+
+}
+
+
+
+
+
+Q.2) Implement a simple server using Node.js. [15] 
+
+
+
+// Import the http module to create an HTTP server
+
+const http = require('http');
+
+
+
+// Set the port for the server to listen on
+
+const port = 3000;
+
+
+
+// Create the server
+
+const server = http.createServer((req, res) => {
+
+  // Set the response HTTP header to specify content type
+
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+
+
+
+  // Send a response to the client
+
+  res.end('Hello, this is a simple Node.js server!');
+
+});
+
+
+
+// Make the server listen on the specified port
+
+server.listen(port, () => {
+
+  console.log(`Server is running at http://localhost:${port}`);
+
+});
+
+
+
+
+
+ 
+
+Slip 6 :
+
+Q.1) Develop an Express.js application that defines routes for Create and Read operations on a resource (products).
+
+
+
+// Importing required modules
+
+const express = require('express');
+
+const app = express();
+
+const port = 3000;
+
+
+
+// Middleware to parse JSON data from the body of requests
+
+app.use(express.json());
+
+
+
+// In-memory product data (as a substitute for a database)
+
+let products = [];
+
+
+
+// Route to Create a new product (POST)
+
+app.post('/products', (req, res) => {
+
+  const { name, price } = req.body;
+
+
+
+  // Simple validation
+
+  if (!name || !price) {
+
+    return res.status(400).json({ message: 'Name and price are required.' });
+
+  }
+
+
+
+  // Creating a new product object
+
+  const newProduct = {
+
+    id: products.length + 1, // simple id generation
+
+    name,
+
+    price
+
+  };
+
+
+
+  // Adding the new product to the in-memory database
+
+  products.push(newProduct);
+
+
+
+  // Sending back a response with the new product
+
+  res.status(201).json({ message: 'Product created successfully', product: newProduct });
+
+});
+
+
+
+// Route to Read all products (GET)
+
+app.get('/products', (req, res) => {
+
+  res.status(200).json(products);
+
+});
+
+
+
+// Starting the server
+
+app.listen(port, () => {
+
+  console.log(`Server is running on http://localhost:${port}`);
+
+});
+
+
+
+
+
+Q.2) Find a company with a workforce greater than 30 in the array. (Using find by id method)
+
+// Sample data: Array of company objects
+
+const companies = [
+
+  { id: 1, name: "Co
